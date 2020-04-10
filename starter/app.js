@@ -19,6 +19,7 @@ var diceDOM = document.querySelector('.dice');
 var winnerDOM = document.querySelector('.winners-class');
 var endFlag = 0;
 
+
 document.querySelector('#score-1').innerHTML = '<b><em>'+gScore[1]+'</em></b>';
 document.querySelector('#score-0').innerHTML = '<b><em>'+gScore[0]+'</em></b>';
 document.querySelector('#current-1').textContent = 0;
@@ -35,14 +36,7 @@ var calDiceVal = function(){
 
 var rollDice = function(){
     if(endFlag == 1)
-        return;
-//    else if (endFlag == 2){
-//        winnerDOM.style.display = 'none';
-//        gScore=[0,0];
-//        curScore=[0,0];
-//        reflect();
-//    }
-        
+        return;        
     
     var diceVal = calDiceVal();
     diceDOM.style.display = 'block';        
@@ -62,7 +56,10 @@ var rollDice = function(){
 
 ///**** CHANGE PLAYER METHOD *******/   
 var changePlayer = function(){
+     document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
     curPlayer = (curPlayer+1)%2;
+    document.querySelector('.player-'+curPlayer+'-panel').classList.add('active');
+    
 //    diceDOM.style.display = 'none';  
     
 }
@@ -76,6 +73,7 @@ var reflect = function(){
 
 }
 
+/***DICE CLICK EVENT ***/
 rollDOM.addEventListener('click', rollDice);
 
 /*****HOLD**********/
@@ -85,28 +83,39 @@ holdDOM.addEventListener('click',function(){
     gScore[curPlayer] += curScore[curPlayer];
     if(gScore[0] >= 20 || gScore[1] >= 20){
         endGame(curPlayer);
+        reflect(); 
+        return;
     }
     changePlayer();
     diceDOM.style.display = 'none';
     curScore=[0,0];
     reflect(); 
     
+    
 });
 
-
+/***NEW GAME FUNCTION ***/
 var newGame = function(){
     endFlag = 0;
     winnerDOM.style.display = 'none';
-        gScore=[0,0];
-        curScore=[0,0];
-        reflect();
+    document.querySelector('.player-'+curPlayer+'-panel').classList.remove('winner');
+    document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
+    document.querySelector('#name-'+curPlayer).innerHTML='Player'+(curPlayer+1);
+    gScore=[0,0];
+    curScore=[0,0];
+    curPlayer = 0;
+    document.querySelector('.player-'+curPlayer+'-panel').classList.add('active');
+    reflect();
 };
 
+/*** END GAME & WINNER DECLARATION ***/
 var endGame = function(curPlayer){
-    diceDOM.style.display = 'none';
-    winnerDOM.style.display='block';
-    winnerDOM.innerHTML = '<b>The winner is Player'+(curPlayer+1)+'</b>' ;
     endFlag=1;
+    diceDOM.style.display = 'none';
+    document.querySelector('.player-'+curPlayer+'-panel').classList.add('winner');
+    document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
+    document.querySelector('#name-'+curPlayer).innerHTML='<b> Player'+(curPlayer+1)+' is the WINNER</b>';
+    
     
 }
 
