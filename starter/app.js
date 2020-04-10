@@ -81,7 +81,7 @@ holdDOM.addEventListener('click',function(){
     if(endFlag == 1)
         return;
     gScore[curPlayer] += curScore[curPlayer];
-    if(gScore[0] >= 20 || gScore[1] >= 20){
+    if(gScore[0] >= 50 || gScore[1] >= 50){
         endGame(curPlayer);
         reflect(); 
         return;
