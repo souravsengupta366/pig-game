@@ -12,12 +12,15 @@ GAME RULES:
 
 var gScore  = [0,0];
 var curScore = [0,0];
-var  curPlayer = 0;
+var  curPlayer = 0; //prevVal = 0;
 var rollDOM = document.querySelector('.btn-roll');
 var holdDOM = document.querySelector('.btn-hold');
 var diceDOM = document.querySelector('.dice');
+var dice2DOM = document.querySelector('.dice2');
 var winnerDOM = document.querySelector('.winners-class');
+var setWinScoreDOM = document.getElementById('set-winScore');
 var endFlag = 0;
+var winScore = 50;
 
 
 document.querySelector('#score-1').innerHTML = '<b><em>'+gScore[1]+'</em></b>';
@@ -36,14 +39,26 @@ var calDiceVal = function(){
 
 var rollDice = function(){
     if(endFlag == 1)
-        return;        
+        return;     
     
     var diceVal = calDiceVal();
-    diceDOM.style.display = 'block';        
+    var diceVal2 = calDiceVal();    
+//    var diceVal = 6;
+//    if(prevVal == 6 && diceVal == 6){
+////        console.log('hi');
+//        prevVal=0;
+//        changePlayer();
+//        return;
+//    }
+    
     diceDOM.src = 'dice-'+diceVal+'.png';   
-    if(diceVal !== 1){
+    dice2DOM.src = 'dice-'+diceVal2+'.png';
+    diceDOM.style.display = 'block';
+    dice2DOM.style.display = 'block';
+   
+    if(diceVal !== 1 && diceVal2 != 1){
 //        gScore[curPlayer] += diceVal;
-        curScore[curPlayer] += diceVal;
+        curScore[curPlayer] += diceVal+diceVal2;
     }        
     else{
         curScore=[0,0];
@@ -51,6 +66,7 @@ var rollDice = function(){
     }
         
      reflect();   
+//     prevVal = diceVal;
 }
 
 
@@ -59,6 +75,8 @@ var changePlayer = function(){
      document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
     curPlayer = (curPlayer+1)%2;
     document.querySelector('.player-'+curPlayer+'-panel').classList.add('active');
+    curScore = [0,0];
+    reflect();
     
 //    diceDOM.style.display = 'none';  
     
@@ -73,26 +91,8 @@ var reflect = function(){
 
 }
 
-/***DICE CLICK EVENT ***/
-rollDOM.addEventListener('click', rollDice);
 
-/*****HOLD**********/
-holdDOM.addEventListener('click',function(){
-    if(endFlag == 1)
-        return;
-    gScore[curPlayer] += curScore[curPlayer];
-    if(gScore[0] >= 50 || gScore[1] >= 50){
-        endGame(curPlayer);
-        reflect(); 
-        return;
-    }
-    changePlayer();
-    diceDOM.style.display = 'none';
-    curScore=[0,0];
-    reflect(); 
-    
-    
-});
+
 
 /***NEW GAME FUNCTION ***/
 var newGame = function(){
@@ -100,9 +100,9 @@ var newGame = function(){
     winnerDOM.style.display = 'none';
     document.querySelector('.player-'+curPlayer+'-panel').classList.remove('winner');
     document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
-    document.querySelector('#name-'+curPlayer).innerHTML='Player'+(curPlayer+1);
+    document.getElementById('name-'+curPlayer).innerHTML='Player'+(curPlayer+1);
     gScore=[0,0];
-    curScore=[0,0];
+//    curScore=[0,0];
     curPlayer = 0;
     document.querySelector('.player-'+curPlayer+'-panel').classList.add('active');
     reflect();
@@ -112,6 +112,7 @@ var newGame = function(){
 var endGame = function(curPlayer){
     endFlag=1;
     diceDOM.style.display = 'none';
+    dice2DOM.style.display = 'none';
     document.querySelector('.player-'+curPlayer+'-panel').classList.add('winner');
     document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
     document.querySelector('#name-'+curPlayer).innerHTML='<b> Player'+(curPlayer+1)+' is the WINNER</b>';
@@ -119,15 +120,44 @@ var endGame = function(curPlayer){
     
 }
 
+/**** SET WIN SCORE ***/
+function setWinScore(){
+    if(endFlag == 1)
+        return;
+    winScore = prompt("Please enter the winning score",50);
+}
+
 document.querySelector('.winners-class').style.display='none';
+
+
+/***EVENT LISTENERS ***/
+
+/***NEW GAME ***/
 document.querySelector('.btn-new').addEventListener('click',newGame);
 
+/***DICE CLICK EVENT ***/
+rollDOM.addEventListener('click', rollDice);
+
+/*****HOLD**********/
+holdDOM.addEventListener('click',function(){
+    if(endFlag == 1)
+        return;
+    gScore[curPlayer] += curScore[curPlayer];
+    if(gScore[0] >= winScore || gScore[1] >= winScore){
+        endGame(curPlayer);
+        reflect(); 
+        return;
+    }
+    changePlayer();
+    diceDOM.style.display = 'none';
+    dice2DOM.style.display = 'none';
+    curScore=[0,0];
+    reflect(); 
+    
+    
+});
 
 
+/***SET NEW WIN SCORE ***/
 
-
-
-//document.querySelector('#score-0').textContent = gScore[0];
-//document.querySelector('#score-1').textContent = gScore[1];
-
-console.log(gScore);
+setWinScoreDOM.addEventListener('click',setWinScore);
