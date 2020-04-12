@@ -107,39 +107,51 @@ var newGame = function(){
     curScore=[0,0];
     curPlayer = 0;
     document.querySelector('.player-0-panel').classList.add('active');
-    winScore = 50;
     reflect();
 };
 
 /*** END GAME & WINNER DECLARATION ***/
-var endGame = function(curPlayer){
+var endGame = function(){
     endFlag=1;
     diceDOM.style.display = 'none';
     dice2DOM.style.display = 'none';
+    curPlayer = gScore[0]>gScore[1]?0:1;
     document.querySelector('.player-'+curPlayer+'-panel').classList.add('winner');
     document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
     document.querySelector('#name-'+curPlayer).innerHTML='<b> Player'+(curPlayer+1)+' is the WINNER</b>';
-    reflect(); 
+    
     
 }
 
 /**** SET WIN SCORE ***/
 function setWinScore(){
+    var tempScore;
     if(endFlag == 1)
         return;
-    prevWinScore = winScore;
-    winScore = prompt("Please enter the winning score",winScore);
-    while(winScore<0)
-        winScore = prompt("Please enter the winning score > 0",50);
-    if(winScore>0)
-        alert("New Winning Score Set: "+winScore);    
-    else if(winScore === null || winScore == 0)
+    
+    tempScore = prompt("Please enter the winning score",winScore);
+    while(tempScore<0)
+        tempScore = prompt("Please enter the winning score > 0",50);
+    
+    if(tempScore>0){
+        prevWinScore = winScore;
+        winScore = tempScore;
+        alert("New Winning Score Set: "+winScore);   
+    }
+         
+    else if(tempScore === null || tempScore == 0)
        {
+           prevWinScore = winScore;
            winScore = prevWinScore;
            alert("Winning Score is still: "+winScore);
        }
+      else if(tempScore != (/^[0-9.,]+$/)){
+          alert("Score cant be "+ tempScore);
+          setWinScore();          
+      }
+    
     if(gScore[0] >= winScore || gScore[1] >= winScore){
-        endGame(curPlayer);
+        endGame();
         return;
     }
       
@@ -163,7 +175,8 @@ holdDOM.addEventListener('click',function(){
         return;
     gScore[curPlayer] += curScore[curPlayer];
     if(gScore[0] >= winScore || gScore[1] >= winScore){
-        endGame(curPlayer);
+        endGame();
+        reflect(); 
         return;
     }
     changePlayer();
