@@ -118,7 +118,7 @@ var endGame = function(curPlayer){
     document.querySelector('.player-'+curPlayer+'-panel').classList.add('winner');
     document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
     document.querySelector('#name-'+curPlayer).innerHTML='<b> Player'+(curPlayer+1)+' is the WINNER</b>';
-    
+    reflect(); 
     
 }
 
@@ -137,6 +137,10 @@ function setWinScore(){
            winScore = prevWinScore;
            alert("Winning Score is still: "+winScore);
        }
+    if(gScore[0] >= winScore || gScore[1] >= winScore){
+        endGame(curPlayer);
+        return;
+    }
       
         
 }
@@ -159,7 +163,6 @@ holdDOM.addEventListener('click',function(){
     gScore[curPlayer] += curScore[curPlayer];
     if(gScore[0] >= winScore || gScore[1] >= winScore){
         endGame(curPlayer);
-        reflect(); 
         return;
     }
     changePlayer();
