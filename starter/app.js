@@ -107,6 +107,7 @@ var newGame = function(){
     curScore=[0,0];
     curPlayer = 0;
     document.querySelector('.player-0-panel').classList.add('active');
+    winScore = 50;
     reflect();
 };
 
