@@ -102,9 +102,11 @@ var newGame = function(){
     document.querySelector('.player-'+curPlayer+'-panel').classList.remove('active');
     document.getElementById('name-'+curPlayer).innerHTML='Player'+(curPlayer+1);
     gScore=[0,0];
-//    curScore=[0,0];
+    diceDOM.style.display = 'none';
+    dice2DOM.style.display = 'none';
+    curScore=[0,0];
     curPlayer = 0;
-    document.querySelector('.player-'+curPlayer+'-panel').classList.add('active');
+    document.querySelector('.player-0-panel').classList.add('active');
     reflect();
 };
 
@@ -124,7 +126,10 @@ var endGame = function(curPlayer){
 function setWinScore(){
     if(endFlag == 1)
         return;
-    winScore = prompt("Please enter the winning score",50);
+    winScore = prompt("Please enter the winning score",winScore);
+    while(winScore<=0)
+        winScore = prompt("Please enter the winning score > 0",50);
+        
 }
 
 document.querySelector('.winners-class').style.display='none';
