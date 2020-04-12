@@ -12,7 +12,7 @@ GAME RULES:
 
 var gScore  = [0,0];
 var curScore = [0,0];
-var  curPlayer = 0; //prevVal = 0;
+var  curPlayer = 0,prevWinScore = 50; //prevVal = 0;
 var rollDOM = document.querySelector('.btn-roll');
 var holdDOM = document.querySelector('.btn-hold');
 var diceDOM = document.querySelector('.dice');
@@ -126,9 +126,18 @@ var endGame = function(curPlayer){
 function setWinScore(){
     if(endFlag == 1)
         return;
+    prevWinScore = winScore;
     winScore = prompt("Please enter the winning score",winScore);
-    while(winScore<=0)
+    while(winScore<0)
         winScore = prompt("Please enter the winning score > 0",50);
+    if(winScore>0)
+        alert("New Winning Score Set: "+winScore);    
+    else if(winScore === null || winScore == 0)
+       {
+           winScore = prevWinScore;
+           alert("Winning Score is still: "+winScore);
+       }
+      
         
 }
 
